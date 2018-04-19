@@ -19,7 +19,7 @@ export default class Login extends Component {
     super(props);
     this.state={
       title:'',
-      type:'',
+      type:'general',
       body:'',
       smester:'',
       rollno:''
@@ -30,6 +30,7 @@ export default class Login extends Component {
       .then((t) => this.setState({rollno:t}));
   }
   _sendApp(){
+    console.log(this.state);
     fetch(`${url}/sendapplication`, {
       method: 'post',
       body:JSON.stringify(this.state),
@@ -75,8 +76,11 @@ export default class Login extends Component {
                 <Label>Smester</Label>
                 <Input type="password" option={{password:true}} onChangeText={(text) => this.setState({smester: text})} value={this.state.smester} />
               </Item>
-              <Picker onValueChange={(itemValue, itemIndex) => this.setState({type: itemValue})}>
-              <Picker.Item label="General" value="gereral" />
+              <Picker
+              selectedValue={this.state.type}
+              style={{width:'100%'}}
+              onValueChange={(itemValue, itemIndex) => this.setState({type: itemValue})}>
+              <Picker.Item label="General" value="general" />
               <Picker.Item label="Complain" value="complain" />
             </Picker>
             <TextInput
