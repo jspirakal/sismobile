@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Container, Header, Content,Body,Card, CardItem, Text, Icon, Right } from 'native-base';
+import { ScrollView, Text, RefreshControl } from 'react-native';
+import { Container, Header, Content,Body,Card, CardItem, Icon, Right } from 'native-base';
 import Stl from "../extra/style";
 import NewsItem from "../components/newsItem";
 import { url } from '../components/credentrial';
@@ -8,7 +9,8 @@ export default class Application extends React.Component {
       super(props);
       this.state={
       news:[],
-      app:''
+      app:'',
+      refreshing:false
     }
     };
     _fetch(){
@@ -26,7 +28,8 @@ export default class Application extends React.Component {
         .then( (obj) => {
             this.setState({news:obj});
             this.setState({loading:'off'});
-            this.setState({app:'loaded'});                    
+            this.setState({app:'loaded'});   
+            this.setState({refreshing: false});      
           })
       
       } else{
@@ -38,6 +41,10 @@ export default class Application extends React.Component {
      })
     }
     componentDidMount(){
+      this._fetch();
+    }
+    _onRefresh() {
+      this.setState({refreshing: true});
       this._fetch();
     }
   render() {
@@ -52,9 +59,19 @@ export default class Application extends React.Component {
     }
     return (
       <Container>
+      <ScrollView 
+      refreshControl={
+        <RefreshControl
+        tintColor={'black'}
+        colors= {['black']}
+        refreshing={this.state.refreshing}
+        onRefresh={this._onRefresh.bind(this)}
+      />}
+      >
       <Content style={{padding:10}}>
         {NewsItems}
       </Content>
+      </ScrollView>
     </Container>
     );
   }

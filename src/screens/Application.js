@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Alert, Text } from "react-native";
+import {Alert, Text, ScrollView, RefreshControl } from "react-native";
 import { Container,  Content,Button } from 'native-base';
 import Stl from "../extra/style";
 import ApplicationItem from "../components/applicationItem";
@@ -9,7 +9,8 @@ export default class Application extends Component {
       super(props);
       this.state={
       applications:[],
-      app:''
+      app:'',
+      refreshing: false,
     }
     };
     _fetch(){
@@ -28,7 +29,8 @@ export default class Application extends Component {
             console.log(obj);
             this.setState({applications:obj});
             this.setState({loading:'off'});
-            this.setState({app:'loaded'});                    
+            this.setState({app:'loaded'});    
+            this.setState({refreshing: false});      
           })
       
       } else{
@@ -80,6 +82,10 @@ export default class Application extends Component {
        })
 
     }
+    _onRefresh() {
+      this.setState({refreshing: true});
+      this._fetch()
+    }
   render() {
     let ApplicationItems;
     if(this.state.app==='loaded')
@@ -98,12 +104,22 @@ export default class Application extends Component {
     }
     return (
       <Container>
+      <ScrollView 
+      refreshControl={
+        <RefreshControl
+        tintColor={'black'}
+        colors= {['black']}
+        refreshing={this.state.refreshing}
+        onRefresh={this._onRefresh.bind(this)}
+      />}
+      >
       <Content style={{padding:10}}>
       <Button block style={{marginTop:20,marginBottom:20}} onPress={this._sendApp.bind(this)} >
         <Text>Send New Application</Text>
       </Button>
         {ApplicationItems}
       </Content>
+      </ScrollView>
     </Container>
     );
   }
