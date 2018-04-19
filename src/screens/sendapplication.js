@@ -78,7 +78,7 @@ export default class Login extends Component {
               </Item>
               <Picker
               selectedValue={this.state.type}
-              style={{width:'100%'}}
+              style={{width:'100%',height:50}}
               onValueChange={(itemValue, itemIndex) => this.setState({type: itemValue})}>
               <Picker.Item label="General" value="general" />
               <Picker.Item label="Complain" value="complain" />
